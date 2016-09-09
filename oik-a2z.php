@@ -54,7 +54,7 @@ function oik_a2z_init() {
  * Implement "oik_fields_loaded" for oik-a2z
  */
 function oik_a2z_oik_fields_loaded() {
-	bw_register_custom_category( "letter", "post", "Letter" );
+	bw_register_custom_tags( "letter", "post", "Letter" );
 }
 
 /**
