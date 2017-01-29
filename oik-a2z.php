@@ -52,6 +52,10 @@ function oik_a2z_init() {
 
 /**
  * Implement "oik_fields_loaded" for oik-a2z
+ * 
+ * Here we register the Letter taxonomy to the post post type
+ * For any other post type this needs to be added either programmatically or using oik-types or a similar plugin.
+ *  
  */
 function oik_a2z_oik_fields_loaded() {
 	bw_register_custom_tags( "letter", "post", "Letter" );

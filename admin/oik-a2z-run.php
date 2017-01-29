@@ -1,4 +1,21 @@
-<?php // (C) Copyright Bobbing Wide 2016
+<?php // (C) Copyright Bobbing Wide 2016, 2017
+
+/**
+ * Implement "query_post_type_letter_taxonomy_filters" for oik-a2z
+ *
+ * @param array $taxonomies
+ * @return array updated with the standard first letter filter 
+ */
+function oik_a2z_query_post_type_letter_taxonomy_filters( $taxonomies ) {
+	$post_types = get_post_types();
+	foreach ( $post_types as $post_type ) { 
+		echo $post_type . PHP_EOL;
+		if ( is_object_in_taxonomy( $post_type, "letter" ) ) {
+			$taxonomies[] = array( "post_type" => $post_type, "taxonomy" => "letter", "filter" => "oik_a2z_first_letter" );
+		}	
+	}
+	return( $taxonomies );
+}
 
 /**
  * Run oik-a2z batch processes
@@ -10,14 +27,15 @@
  * - create the empty terms
  * - and then set a value for each post
  * 
+ * 
  */
 function oik_a2z_lazy_run_oik_a2z() {
-
 	//$terms = oik_a2z_get_letter_terms();
 	oik_a2z_set_empty_terms();
 	add_action( "oik_a2z_set_posts_terms_filters", "oik_a2z_set_posts_terms_filters", 10, 3 );
+	add_filter( "query_post_type_letter_taxonomy_filters", "oik_a2z_query_post_type_letter_taxonomy_filters" );
+	$taxonomies = apply_filters( "query_post_type_letter_taxonomy_filters", array() );
 	
-	$taxonomies = array( array( "post_type" => "post", "taxonomy" => "letter", "filter" => "oik_a2z_first_letter" ) );
 	foreach ( $taxonomies as $post_type_taxonomy ) {
 		$post_type = bw_array_get( $post_type_taxonomy, "post_type", null );
 		$taxonomy = bw_array_get( $post_type_taxonomy, "taxonomy", null );
@@ -60,14 +78,24 @@ function oik_a2z_set_empty_terms( $taxonomy='letter', $terms=null ) {
  * @param string $filter
  */
 function oik_a2z_set_posts_terms( $post_type, $taxonomy, $filter ) { 
+	echo "$post_type $taxonomy $filter " . PHP_EOL;
 	do_action( "oik_a2z_set_posts_terms_filters", $post_type, $taxonomy, $filter );
 	$args = array( "post_type" => $post_type 
 							 , "numberposts" => -1
+							 , "post_parent" => '.'
+							 , "post_status" => "any"
 							 );
 	oik_require( "includes/bw_posts.inc" );							
 	$posts = bw_get_posts( $args );
 	foreach ( $posts as $post ) {
 		$terms = wp_get_object_terms( $post->ID, $taxonomy, array( "fields" => "names" ) );
+		echo $post->post_type;
+		echo " ";
+		echo $post->ID;
+		echo " ";
+		echo $post->post_title;
+		echo " ";
+		echo bw_array_get( $terms, 0, null );
 		$new_terms = apply_filters( "oik_a2z_query_terms_" . $post_type . "_". $taxonomy, $terms, $post );
 		if ( $new_terms <> $terms ) {
 			echo "update_terms( $post->ID );" . PHP_EOL;
@@ -121,7 +149,7 @@ function oik_a2z_first_letter( $terms, $post ) {
 	}
 	$new_term = ucfirst( substr( $string, 0, 1 ) );
 	$new_term = remove_accents( $new_term );
-	echo "New term: $new_term" ;
+	echo "New term: $new_term" . PHP_EOL ;
 	$terms[0] = $new_term;
 	//print_r( $terms );
 	return( $terms );
