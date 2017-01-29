@@ -1,0 +1,29 @@
+/* // (C) Copyright Bobbing Wide 2017
+ * Default styling for the oik-a2z pagination list.
+ * @TODO It works better when the CSS is enqueued early... so this should really be in the theme.
+ */
+ 
+ul.a2z {
+	display: block;
+}
+
+ul.a2z li {
+	display: block;
+	color: #bbbbbb;
+	background-color: #222222;
+	float: left;
+	margin-right: 2px;
+	padding: 0px 4px;
+}
+
+ul.a2z li a {
+	color: #ffffff;
+}
+
+ul.a2z li a:hover {
+	color: #6a6a2a;
+}
+
+ul.a2z li a span.count { 
+	display: none;
+}
