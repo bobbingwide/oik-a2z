@@ -3,7 +3,7 @@
 /**
 Plugin Name: oik-a2z
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-a2z
-Description: Pagination by letter
+Description: Letter taxonomy pagination
 Version: 0.0.1
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide

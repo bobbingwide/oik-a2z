@@ -85,7 +85,7 @@ class OIK_a2z_display {
 		}
 		echo "<li>";
 		echo $link; 
-		echo "</li>";
+		echo "</li>\n";
 	}
 	
 	/**
