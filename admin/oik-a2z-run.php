@@ -130,7 +130,7 @@ function oik_a2z_set_posts_terms_filters( $post_type, $taxonomy, $filter ) {
  * Letter        | Term | Comments
  * -------       | ---- | -------------
  * A..Z          | same | uppercased first character passed through remove_accents() 
- * 0..9          | same |
+ * 0..9          | #    |
  * _             | _    | @TODO to be completed
  * [             | [    |
  * anything else | ?    | 
@@ -141,14 +141,17 @@ function oik_a2z_set_posts_terms_filters( $post_type, $taxonomy, $filter ) {
  * @return array replaced by the new term
  */
 function oik_a2z_first_letter( $terms, $post ) {
-	//print_r( $terms );
-	//print_r( $post );
 	$string = trim( $post->post_title );
 	if ( !$string ) {
 		$string = trim( $post->post_content );
 	}
-	$new_term = ucfirst( substr( $string, 0, 1 ) );
-	$new_term = remove_accents( $new_term );
+	$new_term = substr( $string, 0, 1 );
+	if ( ctype_digit( $new_term ) ) {
+		$new_term = "#";
+	}	else {
+		$new_term = ucfirst( $new_term );
+		$new_term = remove_accents( $new_term );
+	}
 	echo "New term: $new_term" . PHP_EOL ;
 	$terms[0] = $new_term;
 	//print_r( $terms );
