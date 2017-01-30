@@ -28,9 +28,12 @@ See https://github.com/bobbingwide/oik-a2z/issues/1
 1. Define additional post type to pagination taxonomy relationships
 
 ## Screenshots 
-1. oik-a2z in action
+1. Displaying the Letter taxonomy for 'l'
 
 ## Upgrade Notice 
+# 0.0.2 
+Now highlights the currently active taxonomy term.
+
 # 0.0.1 
 Now provides 'oik_a2z_display' action for use in themes.
 
@@ -38,6 +41,9 @@ Now provides 'oik_a2z_display' action for use in themes.
 New plugin, available from oik-plugins and GitHub
 
 ## Changelog 
+# 0.0.2 
+* Changed: Highlights the currently active term.
+
 # 0.0.1 
 * Changed: Implement 'oik_a2z_display' https://github.com/bobbingwide/oik-a2z/issues/1
 * Changed: Improve improve batch facility to set letter terms https://github.com/bobbingwide/oik-a2z/issues/2
