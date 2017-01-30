@@ -5,9 +5,8 @@
  * 
  * Displays letter taxonomy links for the current URL
  * 
- * @TODO - set current class for the currently selected taxonomy term
+ * @TODO Cache the results having built an array of items then apply the class to the list item for the active term afterwards.
  * 
- *
  */
 class OIK_a2z_display {
 	public $taxonomy;
@@ -28,6 +27,36 @@ class OIK_a2z_display {
 		$terms = $this->get_terms();
 		$this->display_term_list( $terms );
 		//$this->enqueue_styles();
+	}
+	
+	/**
+	 * Determines the active term
+	 * 
+	 * This should be easy to find from the current query. 
+	 * Note: There may not be an active term for the given taxonomy
+	 * since this may not be a taxonomy archive... just the list to allow selection.
+	 
+	 * @param object $term the term object... or part thereof?
+	 * @return bool true if this is the active term
+	 */
+	function query_active_term( $term ) {
+		$is_tax = is_tax( $this->taxonomy, $term->term_id );
+		bw_trace2( $is_tax, "is_tax" );
+		return( $is_tax );	
+	}
+	
+	/**
+	 * Queries the term class
+	 *
+	 * @param object $term the term object... or part thereof?
+	 * @return string the CSS classes to append to the term's list item
+	 */
+	function query_term_class( $term ) {
+		$term_class = null;
+		if ( $this->query_active_term( $term ) ) {
+			$term_class = "active current";
+		} 
+		return( $term_class );
 	}
 	
 	/**
@@ -83,7 +112,8 @@ class OIK_a2z_display {
 		} else {
 			$link = retlink( "a2z_term empty", null, $term->name );
 		}
-		echo "<li>";
+		$term_class = $this->query_term_class( $term );
+		echo retstag( "li", $term_class );
 		echo $link; 
 		echo "</li>\n";
 	}
