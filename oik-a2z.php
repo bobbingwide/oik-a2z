@@ -4,7 +4,7 @@
 Plugin Name: oik-a2z
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-a2z
 Description: Letter taxonomy pagination
-Version: 0.0.2
+Version: 0.0.3
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 License: GPLv2 or later
@@ -51,12 +51,14 @@ function oik_a2z_init() {
 /**
  * Implement "oik_fields_loaded" for oik-a2z
  * 
- * Here we register the Letter taxonomy to the post post type
+ * Here we register the Letter taxonomy to the 'post' post type
  * For any other post type this needs to be added either programmatically or using oik-types or a similar plugin.
  *  
  */
 function oik_a2z_oik_fields_loaded() {
 	bw_register_custom_tags( "letter", "post", "Letter" );
+	add_filter( "query_post_type_letter_taxonomy_filters", "oik_a2z_query_post_type_letter_taxonomy_filters" );
+	add_action( "wp_insert_post", "oik_a2z_wp_insert_post", 10, 3 );
 }
 
 /**
@@ -95,6 +97,47 @@ function oik_a2z_get_letter_terms( $terms=null ) {
 }
 
 /**
+ * Implements "query_post_type_letter_taxonomy_filters" for oik-a2z
+ *
+ * Returns the hook names to invoke to set the letter taxonomy for each post type to which it is associated.
+ * Other plugins can implement their own filter routines, using this filter as the trigger for loading and attaching 
+ * their own filter functions. 
+
+ * 
+ * @param array $taxonomies
+ * @return array updated with the standard first letter filters 
+ */
+function oik_a2z_query_post_type_letter_taxonomy_filters( $taxonomies ) {
+	$taxonomy = "letter";
+	$filter = "oik_a2z_first_letter";
+	$post_types = get_post_types();
+	foreach ( $post_types as $post_type ) { 
+		//echo $post_type . PHP_EOL;
+		if ( is_object_in_taxonomy( $post_type, $taxonomy ) ) {
+			$hook = oik_a2z_set_posts_terms_filters( $post_type, $taxonomy, $filter );
+			$taxonomies[ $hook ] = array( "post_type" => $post_type, "taxonomy" => $taxonomy, "filter" => $filter );
+		}	
+	}
+	return( $taxonomies );
+}
+
+/**
+ * Registers a post type letter taxonomy filter function.
+ *
+ * Note: When implementing your own hook for "query_post_type_letter_taxonomy_filters" use 
+ * this function to add your own letter taxonomy hook function.
+ * 
+ * @param string $post_type
+ * @param string $taxonomy 
+ * @param string $filter
+ */
+function oik_a2z_set_posts_terms_filters( $post_type, $taxonomy, $filter ) {
+	$hook = "oik_a2z_query_terms_" . $post_type . "_" . $taxonomy;
+	add_filter( $hook, $filter, 10, 2 ); 
+	return( $hook );
+}
+
+/**
  * Run oik-a2z.php in batch
  *
  * 
@@ -102,5 +145,67 @@ function oik_a2z_get_letter_terms( $terms=null ) {
 function oik_a2z_run_oik_a2z() {
 	oik_require( "admin/oik-a2z-run.php", "oik-a2z" );
 	oik_a2z_lazy_run_oik_a2z();
+}
+
+
+/**
+ * Implements 'wp_insert_post' action for oik-a2z
+ * 
+ * @param ID $post_ID ID of the post 
+ * @param object $post the post object
+ * @param bool $update true if it's an update
+ */ 
+function oik_a2z_wp_insert_post( $post_ID, $post, $update ) {
+
+	if ( "auto-draft" !== $post->post_status ) {
+		oik_require( "admin/oik-a2z-letters.php", "oik-a2z" );
+		oik_a2z_set_letter_taxonomies( $post_ID, $post, $update );
+	}
+	 
+}
+
+
+
+/**
+ * Implement "oik_a2z_query_terms_$post_type_$taxonomy" with default logic
+ * 
+ * e.g. "oik_a2z_query_terms_post_letter" for post_type: post, taxonomy: letter
+ * 
+ * Mapping of the first letter to a term is like this:
+ * 
+ * - Choose the first non blank value from post_title or post_content
+ * - Simplify accented characters to A..Z
+ * - Handle other special characters as we see fit.
+ * 
+ * Letter        | Term | Comments
+ * -------       | ---- | -------------
+ * A..Z          | same | uppercased first character passed through remove_accents() 
+ * 0..9          | #    |
+ * _             | _    | @TODO to be completed
+ * [             | [    |
+ * anything else | ?    | 
+ 
+ * 
+ * @param array $terms - current values - there may be more than one - can you think of a good reason?
+ * @param object $post
+ * @return array replaced by the new term
+ */
+function oik_a2z_first_letter( $terms, $post ) {
+	//$terms = bw_as_array( $terms );
+	$string = trim( $post->post_title );
+	if ( !$string ) {
+		$string = trim( $post->post_content );
+	}
+	$new_term = substr( $string, 0, 1 );
+	if ( ctype_digit( $new_term ) ) {
+		$new_term = "#";
+	}	else {
+		$new_term = ucfirst( $new_term );
+		$new_term = remove_accents( $new_term );
+	}
+	//echo "New term: $new_term" . PHP_EOL ;
+	$terms[0] = $new_term;
+	//print_r( $terms );
+	return( $terms );
 }
 
