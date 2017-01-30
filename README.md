@@ -5,7 +5,7 @@
 * Tags: shortcodes, smart, lazy
 * Requires at least: 4.5
 * Tested up to: 4.7.2
-* Stable tag: 0.0.1
+* Stable tag: 0.0.3
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,9 @@ See https://github.com/bobbingwide/oik-a2z/issues/1
 1. Displaying the Letter taxonomy for 'l'
 
 ## Upgrade Notice 
+# 0.0.3 
+Now automaticallly sets the letter taxonomy term when a post is saved.
+
 # 0.0.2 
 Now highlights the currently active taxonomy term.
 
@@ -41,6 +44,9 @@ Now provides 'oik_a2z_display' action for use in themes.
 New plugin, available from oik-plugins and GitHub
 
 ## Changelog 
+# 0.0.3 
+* Changed: Automatically set the 'letter' taxonomy term when a post is saved.
+
 # 0.0.2 
 * Changed: Highlights the currently active term.
 
