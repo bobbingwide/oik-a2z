@@ -31,7 +31,7 @@ See [github bobbingwide oik-a2z issue 1]
 
 == Upgrade Notice ==
 = 0.0.4 = 
-Now provides the [bw_terms[] shortcode.
+Now provides the [bw_terms] shortcode.
 
 = 0.0.3 = 
 Now automaticallly sets the letter taxonomy term when a post is saved.
