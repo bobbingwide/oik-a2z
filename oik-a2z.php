@@ -40,6 +40,8 @@ function oik_a2z_loaded() {
 	add_action( "run_oik-a2z.php", "oik_a2z_run_oik_a2z" );
 	// Add further batch files if needed
 	//add_action( "run_filename", "oik_a2z_run_filename" );
+	
+	//add_action( "oik_add_shortcodes", "oik_a2z_oik_add_shortcodes" );
 }
 
 /**
@@ -102,7 +104,9 @@ function oik_a2z_get_letter_terms( $terms=null ) {
  * Returns the hook names to invoke to set the letter taxonomy for each post type to which it is associated.
  * Other plugins can implement their own filter routines, using this filter as the trigger for loading and attaching 
  * their own filter functions. 
-
+ * 
+ * Note: If a different letter based taxonomy is associated to a post type but the filter function is not defined
+ * then the value will be set to whatever the user chose.
  * 
  * @param array $taxonomies
  * @return array updated with the standard first letter filters 
@@ -157,7 +161,7 @@ function oik_a2z_run_oik_a2z() {
  */ 
 function oik_a2z_wp_insert_post( $post_ID, $post, $update ) {
 
-	if ( "auto-draft" !== $post->post_status ) {
+	if ( "auto-draft" !== $post->post_status && isset( $_REQUEST['tax_input'] ) ) { 
 		oik_require( "admin/oik-a2z-letters.php", "oik-a2z" );
 		oik_a2z_set_letter_taxonomies( $post_ID, $post, $update );
 	}
@@ -188,24 +192,70 @@ function oik_a2z_wp_insert_post( $post_ID, $post, $update ) {
  * 
  * @param array $terms - current values - there may be more than one - can you think of a good reason?
  * @param object $post
- * @return array replaced by the new term
+ * @return array replaced by the new term name
  */
 function oik_a2z_first_letter( $terms, $post ) {
+	bw_trace2();
 	//$terms = bw_as_array( $terms );
 	$string = trim( $post->post_title );
+	
+	//echo "PT" . $string; // **?**
+	//echo PHP_EOL;
 	if ( !$string ) {
 		$string = trim( $post->post_content );
 	}
+	//echo "PC" . $string; // **?**
+	//echo PHP_EOL;
 	$new_term = substr( $string, 0, 1 );
 	if ( ctype_digit( $new_term ) ) {
 		$new_term = "#";
 	}	else {
 		$new_term = ucfirst( $new_term );
+		//echo "New term: $new_term" . PHP_EOL ;
 		$new_term = remove_accents( $new_term );
+		
+		//echo "New term: $new_term" . PHP_EOL ;
 	}
-	//echo "New term: $new_term" . PHP_EOL ;
+	$new_term = esc_html( $new_term );
 	$terms[0] = $new_term;
-	//print_r( $terms );
 	return( $terms );
 }
+
+/**
+ * Queries term IDs for term names.
+ * 
+ * Note: This does not support hierarchical taxonomies.
+ * 
+ * @param array $term_names array of escaped term names
+ * @param string $taxonomy the taxonomy name
+ * @return array $term_ids
+ */
+function oik_a2z_query_term_ids( $term_names, $taxonomy ) {
+	$term_ids = array();
+	foreach ( $term_names as $name ) {
+		$term_object = get_term_by( 'name', $name, $taxonomy );
+		if ( $term_object ) {
+			$term_ids[] = $term_object->term_id;
+		}	else {
+			// Term does not exist so it will need to be created. 
+			$result = wp_insert_term( $name, $taxonomy );
+			if ( is_wp_error( $result ) ) {
+				bw_trace2( $result, "result" );
+			} else {
+				$term_ids[] = $result[0];
+			}
+		}
+	}
+	return( $term_ids );
+}
+
+/**
+ * Implement "oik_add_shortcodes" to add our own shortcodes
+ */
+function oik_a2z_oik_add_shortcodes() {
+	bw_add_shortcode( 'bw_terms', 'oik_a2z_terms', oik_path( "shortcodes/oik-a2z-terms.php", "oik-a2z" ) );
+}
+
+
+
 

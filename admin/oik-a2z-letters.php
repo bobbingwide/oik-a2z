@@ -36,20 +36,25 @@
  * @param bool $update true if it's an update
  */ 
 function oik_a2z_set_letter_taxonomies( $post_ID, $post, $update ) {
-	//bw_trace2();
+	bw_trace2( $_REQUEST, "_REQUEST" );
 	/**
 	 * 
 	 * $taxonomies is an array keyed by the hook name with the following fields: "post_type" =>  "taxonomy" =>  "filter" =>
 	 */
 	$taxonomies = apply_filters( "query_post_type_letter_taxonomy_filters", array() );
+	bw_trace2( $taxonomies, "taxonomies", false );
 	foreach ( $taxonomies as $post_type_taxonomy_filter => $data ) {
 		$hook = $post_type_taxonomy_filter;
-		$terms = apply_filters( $post_type_taxonomy_filter, $_REQUEST['tax_input'][ $data['taxonomy']], $post );
-		//bw_trace2( $terms, "terms" );
-    wp_set_post_terms( $post_ID, $terms, $data['taxonomy'] );
-		
+		// $_REQUEST['tax_input'] is set but what about the $data['taxonomy'] index? 
+		$terms = $_REQUEST['tax_input'][$data['taxonomy']];
+		$term_names = apply_filters( $post_type_taxonomy_filter, $terms, $post );
+		bw_trace2( $term_names, "term_names" );
+		$term_ids = oik_a2z_query_term_ids( $term_names, $data['taxonomy'] );
+    wp_set_post_terms( $post_ID, $term_ids, $data['taxonomy'] );
 	}
 }
+
+
 	
 	
 	

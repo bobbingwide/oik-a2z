@@ -79,10 +79,16 @@ function oik_a2z_set_posts_terms( $post_type, $taxonomy, $filter ) {
 		echo " ";
 		echo bw_array_get( $terms, 0, null );
 		$new_terms = apply_filters( "oik_a2z_query_terms_" . $post_type . "_". $taxonomy, $terms, $post );
+		echo implode( ",", $new_terms );
+		echo PHP_EOL;
 		if ( $new_terms <> $terms ) {
 			echo "update_terms( $post->ID );" . PHP_EOL;
-			wp_set_object_terms( $post->ID, $new_terms, $taxonomy, false );
-			//gob();
+			$term_ids = oik_a2z_query_term_ids( $new_terms, $taxonomy );
+			$result = wp_set_object_terms( $post->ID, $term_ids, $taxonomy, false );
+			if ( is_wp_error( $result ) ) {
+				bw_trace2( $result, "result", false );
+				gob();
+			}
 		}	else {
 			// No change so no need to update
 		}
