@@ -4,7 +4,7 @@
 Plugin Name: oik-a2z
 Plugin URI: http://www.oik-plugins.com/oik-plugins/oik-a2z
 Description: Letter taxonomy pagination
-Version: 0.0.3
+Version: 0.0.4
 Author: bobbingwide
 Author URI: http://www.oik-plugins.com/author/bobbingwide
 License: GPLv2 or later
