@@ -36,12 +36,11 @@ oik_a2z_loaded();
 function oik_a2z_loaded() {
 	add_action( "init", "oik_a2z_init" );
 	add_action( "oik_fields_loaded", "oik_a2z_oik_fields_loaded" );
-	add_action( "oik_a2z_display", "oik_a2z_display", 10 );
+	add_action( "oik_a2z_display", "oik_a2z_display", 10, 2 );
 	add_action( "run_oik-a2z.php", "oik_a2z_run_oik_a2z" );
 	// Add further batch files if needed
 	//add_action( "run_filename", "oik_a2z_run_filename" );
-	
-	//add_action( "oik_add_shortcodes", "oik_a2z_oik_add_shortcodes" );
+	add_action( "oik_add_shortcodes", "oik_a2z_oik_add_shortcodes" );
 }
 
 /**
@@ -69,11 +68,12 @@ function oik_a2z_oik_fields_loaded() {
  * Use this action to display links for all the categories in the selected taxonomy.
  * 
  * @param string $taxonomy
+ * @param array $atts - additional parameters - see [bw_terms] shortcode
  */
-function oik_a2z_display( $taxonomy="letter" ) {
+function oik_a2z_display( $taxonomy="letter", $atts=array() ) {
 	oik_require( "includes/class-oik-a2z-display.php", "oik-a2z" );
 	$oik_a2z_display = new OIK_a2z_display();
-	$oik_a2z_display->display( $taxonomy );
+	$oik_a2z_display->display( $taxonomy, $atts );
 }
 
 /**
@@ -151,24 +151,21 @@ function oik_a2z_run_oik_a2z() {
 	oik_a2z_lazy_run_oik_a2z();
 }
 
-
 /**
  * Implements 'wp_insert_post' action for oik-a2z
+ * 
+ * Lazy loads the logic when the request contains taxonomy term input.
  * 
  * @param ID $post_ID ID of the post 
  * @param object $post the post object
  * @param bool $update true if it's an update
  */ 
 function oik_a2z_wp_insert_post( $post_ID, $post, $update ) {
-
 	if ( "auto-draft" !== $post->post_status && isset( $_REQUEST['tax_input'] ) ) { 
 		oik_require( "admin/oik-a2z-letters.php", "oik-a2z" );
 		oik_a2z_set_letter_taxonomies( $post_ID, $post, $update );
 	}
-	 
 }
-
-
 
 /**
  * Implement "oik_a2z_query_terms_$post_type_$taxonomy" with default logic
@@ -253,7 +250,7 @@ function oik_a2z_query_term_ids( $term_names, $taxonomy ) {
  * Implement "oik_add_shortcodes" to add our own shortcodes
  */
 function oik_a2z_oik_add_shortcodes() {
-	bw_add_shortcode( 'bw_terms', 'oik_a2z_terms', oik_path( "shortcodes/oik-a2z-terms.php", "oik-a2z" ) );
+	bw_add_shortcode( 'bw_terms', 'oik_a2z_terms', oik_path( "shortcodes/oik-a2z-terms.php", "oik-a2z" ), false );
 }
 
 

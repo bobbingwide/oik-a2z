@@ -11,6 +11,8 @@
 class OIK_a2z_display {
 	public $taxonomy;
 	public $post_type;
+	public $atts;
+	public $count;
 
 	function __construct() {
 	}
@@ -19,14 +21,24 @@ class OIK_a2z_display {
 	 * Displays links for the selected taxonomy
 	 *	
  	 */
-	function display( $taxonomy="letter" ) {
+	function display( $taxonomy="letter", $atts=array() ) {
 		if ( '' === $taxonomy ) {
 			$taxonomy = "letter";
 		}
 		$this->taxonomy = $taxonomy;
+		$this->parse_atts( $atts );
 		$terms = $this->get_terms();
 		$this->display_term_list( $terms );
 		//$this->enqueue_styles();
+	}
+	
+	/** 
+	 * Parses the attributes 
+	 *
+	 */
+	function parse_atts( $atts ) {
+		$this->atts = $atts;
+		$this->count = bw_validate_torf( bw_array_get( $atts, "count", false ) );
 	}
 	
 	/**
@@ -61,6 +73,8 @@ class OIK_a2z_display {
 	
 	/**
 	 * Retrieves the terms for the taxonomy
+	 * 
+	 * 
 	 */
 	function get_terms() {
 		$args = array( "taxonomy" => $this->taxonomy
@@ -126,9 +140,11 @@ class OIK_a2z_display {
 	 */
 	function term_string( $term ) {	
 		$term_string = $term->name;
-		$term_string .= retstag( "span", "count" );
-		$term_string .= $term->count;
-		$term_string .= retetag( "span" );
+		if ( $this->count ) {
+			$term_string .= retstag( "span", "count" );
+			$term_string .= $term->count;
+			$term_string .= retetag( "span" ); 
+		}			
 		return( $term_string );
 	}
 	
