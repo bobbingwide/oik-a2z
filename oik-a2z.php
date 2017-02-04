@@ -41,6 +41,7 @@ function oik_a2z_loaded() {
 	// Add further batch files if needed
 	//add_action( "run_filename", "oik_a2z_run_filename" );
 	add_action( "oik_add_shortcodes", "oik_a2z_oik_add_shortcodes" );
+	add_action( "oik_admin_menu", "oik_a2z_oik_admin_menu" );
 }
 
 /**
@@ -251,6 +252,16 @@ function oik_a2z_query_term_ids( $term_names, $taxonomy ) {
  */
 function oik_a2z_oik_add_shortcodes() {
 	bw_add_shortcode( 'bw_terms', 'oik_a2z_terms', oik_path( "shortcodes/oik-a2z-terms.php", "oik-a2z" ), false );
+}
+
+
+/**
+ * Implement "oik_admin_menu" for oik-a2z
+ *
+ */
+function oik_a2z_oik_admin_menu() {
+  oik_require( "admin/oik-a2z-admin.php", "oik-a2z" );
+  oik_a2z_lazy_admin_menu();
 }
 
 
