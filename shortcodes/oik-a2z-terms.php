@@ -14,7 +14,7 @@
  * @return string generated HTML
  */
 function oik_a2z_terms( $atts, $content, $tag ) {
-	$taxonomy = bw_array_get_from( $atts, "taxonomy,0", "letter" ); 
+	$taxonomy = bw_array_get_from( $atts, "taxonomy,0", "letters" ); 
 	ob_start();
 	do_action( "oik_a2z_display", $taxonomy, $atts );
 	$contents = ob_get_contents();
@@ -34,11 +34,11 @@ function bw_terms__help( $shortcode="bw_terms" ) {
  * Syntax hook for bw_terms
  *
  * @TODO Do we need orderby and order parms?
- 
+ * @TODO Are count= and class= supported yet?
  *
  */
 function bw_terms__syntax( $shortcode="bw_terms" ) {
-	$syntax = array( "taxonomy" => bw_skv( "letter", "category|post_tag|<i>taxonomy_name</i>", "Taxonomy to display" )
+	$syntax = array( "taxonomy" => bw_skv( "letters", "category|post_tag|<i>taxonomy_name</i>", "Taxonomy to display" )
 								 , "count" => bw_skv( false, true, "Include term count" )
 								 , "class" => bw_skv( "class", "<i>text</i>", "CSS class names" )
 								 );
