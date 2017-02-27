@@ -21,14 +21,16 @@ class OIK_a2z_display {
 	 * Displays links for the selected taxonomy
 	 *	
  	 */
-	function display( $taxonomy="letter", $atts=array() ) {
+	function display( $taxonomy="letters", $atts=array() ) {
 		if ( '' === $taxonomy ) {
-			$taxonomy = "letter";
+			$taxonomy = "letters";
 		}
 		$this->taxonomy = $taxonomy;
 		$this->parse_atts( $atts );
 		$terms = $this->get_terms();
-		$this->display_term_list( $terms );
+		if ( $terms ) {
+			$this->display_term_list( $terms );
+		}	
 		//$this->enqueue_styles();
 	}
 	
@@ -39,6 +41,8 @@ class OIK_a2z_display {
 	function parse_atts( $atts ) {
 		$this->atts = $atts;
 		$this->count = bw_validate_torf( bw_array_get( $atts, "count", false ) );
+		$this->post_type = bw_array_get( $atts, "post_type", false );
+		
 	}
 	
 	/**
@@ -74,13 +78,18 @@ class OIK_a2z_display {
 	/**
 	 * Retrieves the terms for the taxonomy
 	 * 
+	 * Note: The default orderby for get_terms is 'name' ASC.
+	 * This can produce different results from wp_tag_cloud() which
+	 * sorts by 'name' using uasort( $tags, '_wp_object_name_sort_cb' );
 	 * 
+	 * Perhaps we should do the same here! 
 	 */
 	function get_terms() {
 		$args = array( "taxonomy" => $this->taxonomy
 								 , "hide_empty" => true
 								 );
 		$terms = get_terms( $args ); 
+		//uasort( $terms, '_wp_object_name_sort_cb' );
 		return( $terms );
 	}
 	
@@ -120,16 +129,25 @@ class OIK_a2z_display {
 	 */
 	function display_term_item( $term ) {
 		if ( $term->count ) {
-			$term_link = get_term_link( $term, $this->taxonomy );
+			$term_link = $this->get_term_link( $term );
 			$term_string = $this->term_string( $term );
 			$link = retlink( "a2z_term", esc_url( $term_link ), $term_string, $term->name );
 		} else {
+			bw_trace2( $term, "term empty?", false );
 			$link = retlink( "a2z_term empty", null, $term->name );
 		}
 		$term_class = $this->query_term_class( $term );
 		echo retstag( "li", $term_class );
 		echo $link; 
 		echo "</li>\n";
+	}
+	
+	function get_term_link( $term ) {
+		$term_link = get_term_link( $term, $this->taxonomy );
+		if ( $this->post_type ) {
+			$term_link = add_query_arg( "post_type", $this->post_type, $term_link );
+		}
+		return( $term_link );
 	}
 	
 	/**
