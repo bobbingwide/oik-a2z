@@ -3,12 +3,16 @@
 /**
  * Run oik-a2z batch processes
  * 
- *
+ * Syntax: oikwp oik-a2z.php post_type=post_type
+ * from the plugin directory
  * 
  * For each post type with a "letter" taxonomy we need to 
  *
  * - create the empty terms
  * - and then set a value for each post
+ * 
+ * This routine runs out of memory for large databases
+ * We need to be able to select the post type and/or taxonomy for which the terms should be set.
  * 
  * 
  */
@@ -23,11 +27,36 @@ function oik_a2z_lazy_run_oik_a2z() {
 		$taxonomy = bw_array_get( $post_type_taxonomy, "taxonomy", null );
 		$filter = bw_array_get( $post_type_taxonomy, "filter", null );
 		if ( $post_type && $taxonomy ) {
-			oik_a2z_set_posts_terms( $post_type, $taxonomy, $filter );
+			if ( oik_a2z_setting_required( $post_type, $taxonomy ) ) { 
+				oik_a2z_set_posts_terms( $post_type, $taxonomy, $filter ); 
+			} else { 
+				echo "Not processing: $post_type, $taxonomy " . PHP_EOL;
+			}
 		}
 	}
 
 }
+
+/**
+ * Determines if the taxonomy terms should be reset.
+ *
+ * @param string $post_type
+ * @param string $taxonomy
+ * @return bool true if required
+ */
+function oik_a2z_setting_required( $post_type, $taxonomy ) {
+	$required = false;
+	$required_post_type = oik_batch_query_value_from_argv( "post_type", false );
+	$required_taxonomy = oik_batch_query_value_from_argv( "taxonomy", false );
+	echo "required_post_type $required_post_type" . PHP_EOL;
+	if ( true === $required_post_type || $required_post_type == $post_type ) {
+		$required = true;
+	}	elseif ( true === $required_taxonomy || $required_taxonomy == $taxonomy ) {
+		$required = true;
+	}
+	return( $required );
+}
+
 
 /**
  * Set empty terms
