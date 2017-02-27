@@ -5,21 +5,40 @@
  *
  */
 function oik_a2z_lazy_admin_menu() {
-	
-	
   add_submenu_page( 'oik_menu', 'oik-a2z settings', "Letter taxonomies", 'manage_categories', 'oik_a2z', "oik_a2z_options_do_page" );
 }
 
+/** 
+ * Letter taxonomy admin page
+ * 
+ * Displays the boxes that show the current state of Letter taxonomies
+ * including the batch setting routine.
+ */
 function oik_a2z_options_do_page() {
-	h2( "Letter taxonomies" );
 	
-	
+  oik_menu_header( "Letter taxonomies" );
+	oik_box( null, null, "Defined taxonomies", "oik_a2z_display_letter_taxonomies" );
   oik_box( null, null, "Batch run", "oik_a2z_batch_run" );
-	
+	oik_menu_footer();
 	bw_flush();
-	
+}
 
-
+/** 
+ * Display the current Letter taxonomies
+ */
+function oik_a2z_display_letter_taxonomies() {
+	$filters = array();
+	//do_action( "oik_add_shortcodes" );
+	$filters = apply_filters( "query_post_type_letter_taxonomy_filters", $filters );
+	stag( "table", "widefat" );
+	$labels = bw_as_array( __( "Post-type,Taxonomy,Filter", 'oik-a2z' ) );
+	bw_tablerow( $labels, "tr", "th" );
+	foreach ( $filters as $hook => $filter ) {
+		//$taxonomy = $filter['taxonomy'];
+		//$filter['terms'] = str_replace( "\n", " ", bw_do_shortcode( "[bw_terms $taxonomy]" ) );
+		bw_tablerow( $filter );
+	}
+	etag( "table" );
 }
 
 /**
@@ -37,8 +56,8 @@ function oik_a2z_batch_run() {
   p( isubmit( "_oik_a2z_set_letters", "Set letters", null, "button-secondary" ) );
   etag( "form" );
   bw_flush();
-
 }
+
 
 /**
  * Performs batch run to set letters
