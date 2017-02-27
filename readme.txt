@@ -4,7 +4,7 @@ Donate link: http://www.oik-plugins.com/oik/oik-donate/
 Tags: shortcodes, smart, lazy
 Requires at least: 4.5
 Tested up to: 4.7.2
-Stable tag: 0.0.4
+Stable tag: 0.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,10 +15,10 @@ Letter taxonomy pagination.
 This is what this plugin is supposed to do.
 See [github bobbingwide oik-a2z issue 1]
 
-- Automatically sets the value for the identified first letter taxonomies using extendable rules
-- Provides a taxonomy page with selectable letters
-- Taxonomy can be associated to any post type
-
+- Automatically sets the value for the identified first letter taxonomies using extendable rules.
+- Provides a taxonomy page with selectable letters.
+- Taxonomy can be associated to any post type.
+- Supports batch setting by post type and letter taxonomy.
 
 
 == Installation ==
@@ -30,6 +30,9 @@ See [github bobbingwide oik-a2z issue 1]
 1. Displaying the Letter taxonomy for 'l'
 
 == Upgrade Notice ==
+= 0.0.5 = 
+Default taxonomy name is letters, plural. 
+
 = 0.0.4 = 
 Now provides the [bw_terms] shortcode.
 
@@ -46,6 +49,13 @@ Now provides 'oik_a2z_display' action for use in themes.
 New plugin, available from oik-plugins and GitHub
 
 == Changelog ==
+= 0.0.5= 
+* Changed: Default taxonomy name is "Letters"
+* Added: Support display of a particular post_type. 
+* Added: Support oikwp oik-a2z.php post_type=post_type
+* Added: Add admin interface to set letter terms and box to display defined letter taxonomies [github bobbingwide oik-a2z issues 4]
+* Fixed: Notice: Undefined letter that I knew existed but wasn't seeing
+
 = 0.0.4 = 
 * Added: [bw_terms] shortcode [github bobbingwide oik-a2z issue 3]
 * Fixed: Cater for special characters like '&' [github bobbingwide oik-a2z issue 2]
