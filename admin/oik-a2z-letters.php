@@ -47,7 +47,8 @@ function oik_a2z_set_letter_taxonomies( $post_ID, $post, $update ) {
 		$hook = $post_type_taxonomy_filter;
 		//$_REQUEST['tax_input'] is set but what about the $data['taxonomy'] index? 
 		//$terms = $_REQUEST['tax_input'][$data['taxonomy']];
-		$terms = bw_array_get( $_REQUEST['tax_input'], $data['taxonomy'], null );
+		$tax_input = bw_array_get( $_REQUEST, 'tax_input', null );
+		$terms = bw_array_get( $tax_input, $data['taxonomy'], null );
 		//bw_trace2( $terms, "terms", false );
 		$term_names = apply_filters( $post_type_taxonomy_filter, $terms, $post );
 		//bw_trace2( $term_names, "term_names" );

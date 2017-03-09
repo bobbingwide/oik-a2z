@@ -166,16 +166,18 @@ function oik_a2z_run_oik_a2z() {
 /**
  * Implements 'wp_insert_post' action for oik-a2z
  * 
- * Lazy loads the logic when the request contains taxonomy term input.
+ * Lazy loads the logic when it's not an auto-draft and the request contains taxonomy term input or when it's being run in batch.
  * 
  * @param ID $post_ID ID of the post 
  * @param object $post the post object
  * @param bool $update true if it's an update
  */ 
 function oik_a2z_wp_insert_post( $post_ID, $post, $update ) {
-	if ( "auto-draft" !== $post->post_status && isset( $_REQUEST['tax_input'] ) ) { 
-		oik_require( "admin/oik-a2z-letters.php", "oik-a2z" );
-		oik_a2z_set_letter_taxonomies( $post_ID, $post, $update );
+	if ( "auto-draft" !== $post->post_status ) {
+		if ( isset( $_REQUEST['tax_input'] ) || PHP_SAPI === "cli" ) { 
+			oik_require( "admin/oik-a2z-letters.php", "oik-a2z" );
+			oik_a2z_set_letter_taxonomies( $post_ID, $post, $update );
+		}	
 	}
 }
 
