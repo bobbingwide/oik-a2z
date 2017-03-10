@@ -164,6 +164,41 @@ function oik_a2z_run_oik_a2z() {
 }
 
 /**
+ * Determines if running from Command Line Interface.
+ * 
+ * @TODO Implement as common method in oik-batch and find out why PHP was misbehaving.
+ * 
+ * I was getting different values for PHP_SAPI and php_sapi_name()
+ * with the value of PHP_SAPI changing at run time. 
+ *
+ * @return bool true if Command Line Interface, false otherwise  
+ */
+function oik_a2z_is_cli() { 
+	//echo "PHP_SAPI: ";
+	//echo PHP_SAPI;
+	//echo PHP_EOL;
+	//echo "php_sapi_name: ";
+	//echo php_sapi_name();
+	//echo PHP_EOL;
+	$cli = php_sapi_name();
+	$is_cli = false;
+	switch ( $cli ) {
+		case 'cli':
+			$is_cli = true;
+		  break;
+		
+		case 'cgi-fcgi':
+			$is_cli = true;
+			bw_trace2( PHP_SAPI, "PHP_SAPI unexpected?", false );
+			break;
+		
+		default:
+	}
+	return( $is_cli );
+}
+
+
+/**
  * Implements 'wp_insert_post' action for oik-a2z
  * 
  * Lazy loads the logic when it's not an auto-draft and the request contains taxonomy term input or when it's being run in batch.
@@ -174,7 +209,7 @@ function oik_a2z_run_oik_a2z() {
  */ 
 function oik_a2z_wp_insert_post( $post_ID, $post, $update ) {
 	if ( "auto-draft" !== $post->post_status ) {
-		if ( isset( $_REQUEST['tax_input'] ) || PHP_SAPI === "cli" ) { 
+		if ( isset( $_REQUEST['tax_input'] ) || oik_a2z_is_cli() ) { 
 			oik_require( "admin/oik-a2z-letters.php", "oik-a2z" );
 			oik_a2z_set_letter_taxonomies( $post_ID, $post, $update );
 		}	
