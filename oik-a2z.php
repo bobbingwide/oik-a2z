@@ -181,6 +181,7 @@ function oik_a2z_is_cli() {
 	//echo php_sapi_name();
 	//echo PHP_EOL;
 	$cli = php_sapi_name();
+	//$cli = PHP_SAPI;
 	$is_cli = false;
 	switch ( $cli ) {
 		case 'cli':
