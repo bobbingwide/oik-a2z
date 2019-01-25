@@ -1,10 +1,10 @@
 === oik-a2z ===
 Contributors: bobbingwide
-Donate link: http://www.oik-plugins.com/oik/oik-donate/
+Donate link: https://www.oik-plugins.com/oik/oik-donate/
 Tags: shortcodes, smart, lazy
-Requires at least: 4.5
-Tested up to: 4.7.2
-Stable tag: 0.0.5
+Requires at least: 4.9.8
+Tested up to: 5.0.3
+Stable tag: 0.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ See [github bobbingwide oik-a2z issue 1]
 1. Displaying the Letter taxonomy for 'l'
 
 == Upgrade Notice ==
+= 0.1.0 = 
+Upgrade for peaceful co-existance with WordPress 5.0 and Gutenberg
+
 = 0.0.5 = 
 Default taxonomy name is letters, plural. 
 
@@ -37,7 +40,7 @@ Default taxonomy name is letters, plural.
 Now provides the [bw_terms] shortcode.
 
 = 0.0.3 = 
-Now automaticallly sets the letter taxonomy term when a post is saved.
+Now automatically sets the letter taxonomy term when a post is saved.
 
 = 0.0.2 =
 Now highlights the currently active taxonomy term.
@@ -49,6 +52,13 @@ Now provides 'oik_a2z_display' action for use in themes.
 New plugin, available from oik-plugins and GitHub
 
 == Changelog ==
+= 0.1.0 = 
+* Changed: Enable automatic letter taxonomy creation using the Block editor [github bobbingwide oik-a2z issues 8]
+* Changed: Support setting letter terms in oik-batch [github bobbingwide oik-a2z issues 7]
+* Fixed: Avoid message for using deprecated bw_posts.inc - now bw_posts.php
+* Tested: With WordPress 5.0.3
+* Tested: With PHP 7.2
+
 = 0.0.5= 
 * Changed: Default taxonomy name is "Letters"
 * Added: Support display of a particular post_type. 

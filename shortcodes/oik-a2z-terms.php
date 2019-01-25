@@ -1,12 +1,12 @@
-<?php // (C) Copyright Bobbing Wide 2017
+<?php // (C) Copyright Bobbing Wide 2017-2019
 
 /**
  * Implements [bw_terms] shortcode 
  * 
  * The oik_a2z_display action echos the output
  * This is not what we want for a shortcode.
- * So we can either use output buffer logic or change the action.d 
- 
+ * So we can either use output buffer logic or change the action.
+ *
  *
  * @param array $atts shortcode parameters
  * @param string $content not expected
