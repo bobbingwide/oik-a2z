@@ -1,4 +1,4 @@
-<?php // (C) Copyright Bobbing Wide 2016, 2017
+<?php // (C) Copyright Bobbing Wide 2016-2019
 
 /**
  * Run oik-a2z batch processes
@@ -96,7 +96,7 @@ function oik_a2z_set_posts_terms( $post_type, $taxonomy, $filter ) {
 							 , "post_parent" => '.'
 							 , "post_status" => "any"
 							 );
-	oik_require( "includes/bw_posts.inc" );							
+	oik_require( "includes/bw_posts.php" );
 	$posts = bw_get_posts( $args );
 	foreach ( $posts as $post ) {
 		$terms = wp_get_object_terms( $post->ID, $taxonomy, array( "fields" => "names" ) );
