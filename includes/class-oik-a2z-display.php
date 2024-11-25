@@ -18,7 +18,7 @@ class OIK_a2z_display {
 	}
 	
 	/** 
-	 * Displays links for the selected taxonomy
+	 * Displays links for the selected taxonomy.
 	 *	
  	 */
 	function display( $taxonomy="letters", $atts=array() ) {
@@ -28,7 +28,7 @@ class OIK_a2z_display {
 		$this->taxonomy = $taxonomy;
 		$this->parse_atts( $atts );
 		$terms = $this->get_terms();
-		if ( $terms ) {
+		if ( $terms && count( $terms ) ) {
 			$this->display_term_list( $terms );
 		}	
 		//$this->enqueue_styles();
@@ -56,6 +56,7 @@ class OIK_a2z_display {
 	 * @return bool true if this is the active term
 	 */
 	function query_active_term( $term ) {
+		//bw_trace2();
 		$is_tax = is_tax( $this->taxonomy, $term->term_id );
 		bw_trace2( $is_tax, "is_tax" );
 		return( $is_tax );	
@@ -90,11 +91,15 @@ class OIK_a2z_display {
 								 );
 		$terms = get_terms( $args ); 
 		//uasort( $terms, '_wp_object_name_sort_cb' );
+		if ( is_wp_error( $terms ) ) {
+			return null;
+		}
 		return( $terms );
 	}
 	
 	/**
-	 * Displays the terms for the taxonomy
+	 * Displays the terms for the taxonomy.
+	 *
 	 */
 	function display_term_list( $terms ) {
 		echo "<div class=\"a2z wrap archive-pagination pagination\">";
