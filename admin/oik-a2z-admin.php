@@ -45,7 +45,10 @@ function oik_a2z_display_letter_taxonomies() {
  * Control the batch run processing
  * 
  * Display a submit button to perform the batch processing
- * If submitted then run it. 
+ * If submitted then run it.
+ *
+ * We need to identify the post_type and taxonomy otherwise we'll get
+ * Fatal error:  Maximum execution time of xx seconds exceeded
  */
 
 function oik_a2z_batch_run() {
@@ -82,7 +85,8 @@ function oik_a2z_perform_batch_run() {
 function oik_a2z_wrap_batch_run() {
 	echo "<p>Performing batch routine to set letter taxonomy terms</p>";
 	echo "<pre>";
-	do_action( "run_oik-a2z.php" );
+	//do_action( "run_oik-a2z.php" );
+	echo "Disabled by Herb 2019/01/25";
 	echo "</pre>";
 }	
 	

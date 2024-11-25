@@ -27,10 +27,14 @@ function oik_a2z_lazy_run_oik_a2z() {
 		$taxonomy = bw_array_get( $post_type_taxonomy, "taxonomy", null );
 		$filter = bw_array_get( $post_type_taxonomy, "filter", null );
 		if ( $post_type && $taxonomy ) {
-			if ( oik_a2z_setting_required( $post_type, $taxonomy ) ) { 
-				oik_a2z_set_posts_terms( $post_type, $taxonomy, $filter ); 
-			} else { 
-				echo "Not processing: $post_type, $taxonomy " . PHP_EOL;
+			if ( oik_a2z_is_cli() ) {
+				if ( oik_a2z_setting_required( $post_type, $taxonomy ) ) {
+					oik_a2z_set_posts_terms( $post_type, $taxonomy, $filter );
+				} else {
+					echo "Not processing: $post_type, $taxonomy " . PHP_EOL;
+				}
+			}   else {
+				oik_a2z_set_posts_terms( $post_type, $taxonomy, $filter );
 			}
 		}
 	}
