@@ -3,13 +3,13 @@
 Plugin Name: oik-a2z
 Plugin URI: https://www.oik-plugins.com/oik-plugins/oik-a2z
 Description: Letter taxonomy pagination
-Version: 0.1.0
+Version: 0.2.0
 Author: bobbingwide
 Author URI: https://www.oik-plugins.com/author/bobbingwide
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-    Copyright 2016-2019 Bobbing Wide (email : herb@bobbingwide.com )
+    Copyright 2016-2019, 2024 Bobbing Wide (email : herb@bobbingwide.com )
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2,

@@ -3,8 +3,8 @@ Contributors: bobbingwide
 Donate link: https://www.oik-plugins.com/oik/oik-donate/
 Tags: shortcodes, smart, lazy
 Requires at least: 4.9.8
-Tested up to: 5.0.3
-Stable tag: 0.1.0
+Tested up to: 6.7.1
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,9 @@ See [github bobbingwide oik-a2z issue 1]
 1. Displaying the Letter taxonomy for 'l'
 
 == Upgrade Notice ==
+= 0.2.0 =
+Update for support for PHP 8.4
+
 = 0.1.0 = 
 Upgrade for peaceful co-existance with WordPress 5.0 and Gutenberg
 
@@ -52,6 +55,13 @@ Now provides 'oik_a2z_display' action for use in themes.
 New plugin, available from oik-plugins and GitHub
 
 == Changelog ==
+= 0.2.0 = 
+* Changed: Only register [bw_terms] shortcode if bw_add_shortcodes() is actually available #10
+* Changed: Don't run oik-a2z-run anymore #4
+* Fixed: Avoid Warnings when the taxonomy is invalid #9
+* Tested: With WordPress 6.7.1
+* Tested: With PHP 8.3 & PHP 8.4
+
 = 0.1.0 = 
 * Changed: Enable automatic letter taxonomy creation using the Block editor [github bobbingwide oik-a2z issues 8]
 * Changed: Support setting letter terms in oik-batch [github bobbingwide oik-a2z issues 7]
@@ -84,5 +94,3 @@ New plugin, available from oik-plugins and GitHub
 = 0.0.0 =
 * Added: New plugin [github bobbingwide oik-a2z issue 1]
 * Added: use oikwp oik-a2z.php to populate the "Letter" taxonomy for posts
-
-
