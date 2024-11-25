@@ -212,7 +212,7 @@ function oik_a2z_is_cli() {
  */ 
 function oik_a2z_wp_insert_post( $post_ID, $post, $update ) {
 	if ( "auto-draft" !== $post->post_status ) {
-		bw_trace2();
+		bw_trace2( null, null, true, BW_TRACE_VERBOSE );
 		//if ( isset( $_REQUEST['tax_input'] ) || oik_a2z_is_cli() ) {
 			oik_require( "admin/oik-a2z-letters.php", "oik-a2z" );
 			oik_a2z_set_letter_taxonomies( $post_ID, $post, $update );
@@ -245,7 +245,7 @@ function oik_a2z_wp_insert_post( $post_ID, $post, $update ) {
  * @return array replaced by the new term name
  */
 function oik_a2z_first_letter( $terms, $post ) {
-	bw_trace2();
+	bw_trace2( null, null, true, BW_TRACE_VERBOSE );
 	//$terms = bw_as_array( $terms );
 	$string = trim( $post->post_title );
 	
@@ -281,7 +281,7 @@ function oik_a2z_first_letter( $terms, $post ) {
  * @return array $term_ids
  */
 function oik_a2z_query_term_ids( $term_names, $taxonomy ) {
-	bw_trace2();
+	bw_trace2( null, null, true, BW_TRACE_VERBOSE );
 	$term_ids = array();
 	if ( is_array( $term_names ) ) {
 		foreach ( $term_names as $name ) {
@@ -291,7 +291,7 @@ function oik_a2z_query_term_ids( $term_names, $taxonomy ) {
 			}	else {
 				// Term does not exist so it will need to be created. 
 				$result = wp_insert_term( $name, $taxonomy );
-					bw_trace2( $result, "result" );
+					bw_trace2( $result, "result", false, BW_TRACE_VERBOSE );
 				if ( is_wp_error( $result ) ) {
 				} else {
 					$term_ids[] = $result['term_id'];
@@ -308,7 +308,9 @@ function oik_a2z_query_term_ids( $term_names, $taxonomy ) {
  * Implement "oik_add_shortcodes" to add our own shortcodes
  */
 function oik_a2z_oik_add_shortcodes() {
-	bw_add_shortcode( 'bw_terms', 'oik_a2z_terms', oik_path( "shortcodes/oik-a2z-terms.php", "oik-a2z" ), false );
+    if ( function_exists('bw_add_shortcode')) {
+        bw_add_shortcode('bw_terms', 'oik_a2z_terms', oik_path("shortcodes/oik-a2z-terms.php", "oik-a2z"), false);
+    }
 }
 
 
